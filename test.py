@@ -1,27 +1,37 @@
 import os
-import platform
-import logging, logging.handlers
+import math
 
-def setLogLevel(loglevel='debug'):
-    numeric_loglevel = getattr(logging, loglevel.upper(), None)
-    if not isinstance(numeric_loglevel, int):
-        raise ValueError('Invalid log level: "%s"\n Try: "debug", "info", "warning", "critical".' % loglevel)
-
-    logging.basicConfig(level=numeric_loglevel, format='%(asctime)s %(name)s %(levelname)s %(message)s')
-
-    program = os.path.basename(__file__)
-    logger = logging.getLogger(program)
+class Partition:
+    total = 0
+    free = 0
+    used = 0
+    path = ""
     
-    syslog_address = '/dev/log'
-    if platform.system() == 'Darwin':
-        syslog_address = '/var/run/syslog'
+    def __init__(self, path):
+        self.path = path
+        self.update()
 
-    print(syslog_address)
-        
-    log_handler = logging.handlers.SysLogHandler(address = syslog_address)
-    logger.addHandler(log_handler)
+    def update(self):
+        st = os.statvfs(self.path)
+        self.total = st.f_blocks * st.f_frsize
+        self.free = st.f_bfree * st.f_frsize
+        self.used = self.total - self.free;
 
-    return logger
+    def getFreeSpace(self):
+        return self.free
 
-logger = setLogLevel()
-logger.info('Hello Log')
+    def getTotalSpace(self):
+        return self.total
+
+    def getUsedSpace(self):
+        return self.used
+
+    def getCapacity(self):
+        return math.ceil(( self.used / self.total ) * 100)
+
+if __name__ == '__main__':
+    p = Partition("/Volumes/NO NAME/")
+    print(p.getTotalSpace())
+    print(p.getFreeSpace())
+    print(p.getUsedSpace())
+    print(p.getCapacity())
