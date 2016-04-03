@@ -1,10 +1,14 @@
+
 # Diskusage program
+
+> I've tested this program on OS X, Ubuntu 12.04LTS(32bit)
 
 # Contents
 
 * [Description](#description)
 * [Requirements](#requirements)
 * [Options](#options)
+* [Test cases](#testcases)
 
 ### <a name="description"></a>Description
 This program periodically writes a log message onto the given disk and the log message has a pre-defined format.
@@ -29,7 +33,16 @@ There are three arguments and the description of each is described below:
  - logtype: `stdout`, `file`, `syslog`
  - logpath: This is optional argument and only used in case that logotype is `file`
 
-ex) diskusage --mounted=/mnt/storage --logtype=file --logpath=/var/log/diskusage.log
+### <a name="testcases"</a>Test Cases
+python3.4 main.py
+: sfsfsdfsdfsdfsdf
+
+python3.4 main.py --mounted=/not/existing/path
+
+python3.4 main.py --mounted=/mnt/storage --logtype=file --logpath=/var/log/diskusage.log
+
+
+python3.4 main.py --mounted=/mnt/storage --logtype=syslog
 
 ----
 
