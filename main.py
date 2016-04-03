@@ -1,17 +1,18 @@
-import argparse
-import modules.Syslog as Syslog
-import modules.timer as timer
-import modules.Partition as Partition
 import time
-import math
+import sys
 
-@timer.setInterval(1, -1)
-def startlogging(mylog, myPart):
+#User-defined modules
+from modules.syslog import Syslog 
+from modules.partition import PartitionInfo
+from modules.arginfo import ArgInfo
+import modules.timer as timer
+
+@timer.set_interval(1, -1)
+def start_logging(mylog, myPart):
 	myPart.update();
 
-	capa = myPart.getCapacity();
-	used = myPart.getUsedSpace();
-	loglevel = "INFO"
+	capa = myPart.get_capacity();
+	used = myPart.get_used_space();
 
 	if ( capa < 90 ):
 		loglevel = "INFO"
@@ -24,25 +25,27 @@ def startlogging(mylog, myPart):
 
 if __name__ == '__main__':
 
-	# Parsing incoming arguements
-	parser = argparse.ArgumentParser()
-	parser.add_argument("--mounted", help="mount position")
-	parser.add_argument("--logtype", help="log type : info, warning, error")
-	parser.add_argument("--logpath", help="log path : stdout, file, syslof ")
-	args = parser.parse_args()
+	# Create an object which contains incoming arguments information
+	args = ArgInfo()
 
 	# If mount position is invalid, print error log and exit program
+	if PartitionInfo.is_mounted(args.mountedpath) == False:
+		print("The given path({0:s}) is not mounted, so program is intentionally terminated".format(args.mountedpath))
+		sys.exit()
 
-	mountpath = "/mnt/position"
-	loglevel = "warning"
+	partInfo = PartitionInfo(args.mountedpath)
+	logInfo = Syslog(args.mountedpath, args.logtype, args.logpath);
 
-	mylog = Syslog.Syslog(mountpath, "stdout", "sample.log");
-	myPart = Partition.Partition(args)
-
-	stopper = startlogging(mylog, myPart)
+	print(">>>> Start logging <<<<")
+	stopper = start_logging(logInfo, partInfo)
 
 	while 1:
-		time.sleep(1)
+		try:
+			time.sleep(1)
+		except KeyboardInterrupt:
+			print("Proram is terminated by KeyboardInterrupt")
+			sys.exit();
 
 	stopper.set()
+	printf(">>>> End logging <<<<")
 

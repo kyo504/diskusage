@@ -1,37 +1,22 @@
-import os
-import math
+import logging
+import logging.handlers
 
-class Partition:
-    total = 0
-    free = 0
-    used = 0
-    path = ""
-    
-    def __init__(self, path):
-        self.path = path
-        self.update()
+my_logger = logging.getLogger('MyLogger')
 
-    def update(self):
-        st = os.statvfs(self.path)
-        self.total = st.f_blocks * st.f_frsize
-        self.free = st.f_bfree * st.f_frsize
-        self.used = self.total - self.free;
+my_logger.setLevel(logging.WARNING)
 
-    def getFreeSpace(self):
-        return self.free
+#logging.basicConfig(level=logging.WARNING, format='level:%(level)7s path:%(path)s capacity:%(capacity)3d%% size:%(size)d')
+#logging.basicConfig(level=logging.WARNING)
+handler = logging.handlers.SysLogHandler(address='/var/run/syslog')
+handler.setFormatter(logging.Formatter('%(asctime)-15s %(levelname)s:%(filename)s:%(lineno)d -- %(message)s'))
+my_logger.addHandler(handler)
 
-    def getTotalSpace(self):
-        return self.total
+'''
+my_logger.warn('waring 111')
+my_logger.critical('critical 222')
+'''
 
-    def getUsedSpace(self):
-        return self.used
 
-    def getCapacity(self):
-        return math.ceil(( self.used / self.total ) * 100)
-
-if __name__ == '__main__':
-    p = Partition("/Volumes/NO NAME/")
-    print(p.getTotalSpace())
-    print(p.getFreeSpace())
-    print(p.getUsedSpace())
-    print(p.getCapacity())
+d = { 'level': "INFO", 'path': '/', 'capacity': 80, 'size': 101010 }
+my_logger.warn('1111111', extra=d)
+my_logger.critical('2222222 ', extra=d)

@@ -1,6 +1,6 @@
 import threading
 
-def setInterval(interval, times = -1):
+def set_interval(interval, times = -1):
 	# This will be the actual decorator,
 	# with fixed interval and times parameter
 	def outer_wrap(function):
