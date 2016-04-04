@@ -7,7 +7,8 @@ from modules.partition import PartitionInfo
 from modules.arginfo import ArgInfo
 import modules.timer as timer
 
-@timer.set_interval(1, -1)
+# Timer callback will be invoked in every 1 minute
+@timer.set_interval(60, -1)
 def start_logging(mylog, myPart):
 	myPart.update();
 
