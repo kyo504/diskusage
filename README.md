@@ -1,10 +1,14 @@
+
 # Diskusage program
+
+> I've tested this program on OS X, Ubuntu 12.04LTS(32bit)
 
 # Contents
 
 * [Description](#description)
 * [Requirements](#requirements)
 * [Options](#options)
+* [Test cases](#testcases)
 
 ### <a name="description"></a>Description
 This program periodically writes a log message onto the given disk and the log message has a pre-defined format.
@@ -29,13 +33,51 @@ There are three arguments and the description of each is described below:
  - logtype: `stdout`, `file`, `syslog`
  - logpath: This is optional argument and only used in case that logotype is `file`
 
-ex) diskusage --mounted=/mnt/storage --logtype=file --logpath=/var/log/diskusage.log
+### <a name="testcases"</a>Test Cases
+
+1. Run program with default values
+	2. Options : default(mounted path= `/`, log type= `stdout`, log path= `None`)
+	3. Command	
+	```Shell
+	$ python3.4 main.py
+	```
+	4. Expected result: log data displays via stdout
+	
+2. Run program with an argument which specifies invalid mounted position
+	3. Options: mounted path= `/not/existing/path`
+	4. Command
+	```Shell
+	$ python3.4 main.py --mounted=/not/existing/path
+	```
+	4. Expected Result: Program is terminated with error message
+
+
+3. Run program with the given options
+	4. Options: mounted= `/valid/mounted/position`,	log type= `file`, log path=`/your/desired/path/filename`
+	5. Command
+	```Shell
+	$ python3.4 main.py --mounted=/valid/mount/path --logtype=file --logpath=/your/desired/path/diskusage.log
+	```
+	6. Expected Result: Log data is stored in the specified path as text file
+
+
+4. Run program with the given options
+	5. Options: mounted path= `/valid/mounted/position`, log type= `syslog`, log path= `None`
+	6. Command
+	```Shell
+	$ python3.4 main.py --mounted=/valid/mounted/position --logtype=syslog
+	```
+	7. Expected Result: Log data is stored as system log.
 
 ----
 
-지금까지는 프로그램에 대한 내용을 기술 한 것이고 아래는 어떻게 이 문제를 해결 했는지에 대한 내용을 기술한다
+From now, I could describe the basic approach to implement this program and how I deal with some issues that I was faced with.
 
-### 구현에 필요한 사항
-- 디스크에 정보를 시스템으로부터 얻어와야 한다.
-- SetInterval로 주기적으로 callback을 호출해야 한다.
+This program has 3 major features.
 
+1. To parse incoming arguments vis command line
+2. To retrieve disk information based on the given partition path
+3. To write logs with pre-defined format
+4. To set a timer to invoke callback periodically 
+
+Basically, I tried to use modularization to simplify as much as possible in the main function. #1, #2, and #3 were implemented as class separately. And the last one(#4) is a module only containing function.
