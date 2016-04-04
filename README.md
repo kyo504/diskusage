@@ -36,37 +36,38 @@ There are three arguments and the description of each is described below:
 ### <a name="testcases"</a>Test Cases
 
 1. Run program with default values
-	2.  mounted path : `/`
-	3.  log type: `stdout`
-	4.  log path: `None`
-
+	2. Options : default(mounted path= `/`, log type= `stdout`, log path= `None`)
+	3. Command	
 	```Shell
 	$ python3.4 main.py
 	```
+	4. Expected result: log data displays via stdout
+	
 2. Run program with an argument which specifies invalid mounted position
-	3. mounted path: `/not/existing/path`
-
+	3. Options: mounted path= `/not/existing/path`
+	4. Command
 	```Shell
 	$ python3.4 main.py --mounted=/not/existing/path
 	```
+	4. Expected Result: Program is terminated with error message
+
 
 3. Run program with the given options
-	4. mounted: `/valid/mounted/position`
-	5. log type: `file`
-	6. log path: `/your/desired/path/filename`
-
+	4. Options: mounted= `/valid/mounted/position`,	log type= `file`, log path=`/your/desired/path/filename`
+	5. Command
 	```Shell
 	$ python3.4 main.py --mounted=/valid/mount/path --logtype=file --logpath=/your/desired/path/diskusage.log
 	```
+	6. Expected Result: Log data is stored in the specified path as text file
+
 
 4. Run program with the given options
-	5. mounted path: `/valid/mounted/position`
-	6. log type: `syslog`
-	7. log path: `None`
-
+	5. Options: mounted path= `/valid/mounted/position`, log type= `syslog`, log path= `None`
+	6. Command
 	```Shell
 	$ python3.4 main.py --mounted=/valid/mounted/position --logtype=syslog
 	```
+	7. Expected Result: Log data is stored as system log.
 
 ----
 
@@ -80,7 +81,3 @@ This program has 3 major features.
 4. To set a timer to invoke callback periodically 
 
 Basically, I tried to use modularization to simplify as much as possible in the main function. #1, #2, and #3 were implemented as class separately. And the last one(#4) is a module only containing function.
-
-1, 2번에 대해서는 간단 하게 설명
-3번에 대해서는 추가적인 설명이 필요하다...
-
