@@ -34,29 +34,53 @@ There are three arguments and the description of each is described below:
  - logpath: This is optional argument and only used in case that logotype is `file`
 
 ### <a name="testcases"</a>Test Cases
-python3.4 main.py
-: sfsfsdfsdfsdfsdf
 
-python3.4 main.py --mounted=/not/existing/path
+1. Run program with default values
+	2.  mounted path : `/`
+	3.  log type: `stdout`
+	4.  log path: `None`
 
-python3.4 main.py --mounted=/mnt/storage --logtype=file --logpath=/var/log/diskusage.log
+	```Shell
+	$ python3.4 main.py
+	```
+2. Run program with an argument which specifies invalid mounted position
+	3. mounted path: `/not/existing/path`
 
+	```Shell
+	$ python3.4 main.py --mounted=/not/existing/path
+	```
 
-python3.4 main.py --mounted=/mnt/storage --logtype=syslog
+3. Run program with the given options
+	4. mounted: `/valid/mounted/position`
+	5. log type: `file`
+	6. log path: `/your/desired/path/filename`
+
+	```Shell
+	$ python3.4 main.py --mounted=/valid/mount/path --logtype=file --logpath=/your/desired/path/diskusage.log
+	```
+
+4. Run program with the given options
+	5. mounted path: `/valid/mounted/position`
+	6. log type: `syslog`
+	7. log path: `None`
+
+	```Shell
+	$ python3.4 main.py --mounted=/valid/mounted/position --logtype=syslog
+	```
 
 ----
 
-지금까지는 프로그램에 대한 내용을 기술 한 것이고 아래는 어떻게 이 문제를 해결 했는지에 대한 내용을 기술한다.
+From now, I could describe the basic approach to implement this program and how I deal with some issues that I was faced with.
 
-일단 이 프로그램에서의 주요 기능은 3가지다
+This program has 3 major features.
 
-1. CLI로 받은 argument를 파싱하는 작업
-2. 주어진 파티션 위치에 대한 디스크 정보를 시스템으로 얻어오는 기능
-3. 주기적으로 타이머 콜백이 동작하도록 해서 로그를 기록하도록 하는 기능
+1. To parse incoming arguments vis command line
+2. To retrieve disk information based on the given partition path
+3. To write logs with pre-defined format
+4. To set a timer to invoke callback periodically 
 
-기본적으로 3가지 기능을 모듈로 묶어서 main에서의 로직은 최대한 간결하게 작성되도록 하였다. 1번과 2번에 대해서는 Class로 만들어서 객체를 생성한 이후에 이 객체를 통해서 모든 액션이 이루어지도록 했으며 3번의 경우에는 굳이 함수 하나만을 위해서 클래스를 만드는 것은 불필요해 보였기 때문에 함수로 유지하고 import만 하기로 했다.
+Basically, I tried to use modularization to simplify as much as possible in the main function. #1, #2, and #3 were implemented as class separately. And the last one(#4) is a module only containing function.
 
-====
 1, 2번에 대해서는 간단 하게 설명
 3번에 대해서는 추가적인 설명이 필요하다...
 
