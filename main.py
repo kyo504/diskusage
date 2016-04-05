@@ -39,6 +39,7 @@ if __name__ == '__main__':
 
 	print(">>>> Start logging <<<<")
 	stop = start_logging(logInfo, partInfo)
+	#cancel_calls = start_logging(logInfo, partInfo)
 
 	while 1:
 		try:
@@ -47,6 +48,7 @@ if __name__ == '__main__':
 			print("Proram is terminated by KeyboardInterrupt")
 			sys.exit();
 
-	stop.set()
-	printf(">>>> End logging <<<<")
+	stop.set() # Stop timer
+	#cancel_calls()
+	print(">>>> End logging <<<<")
 
