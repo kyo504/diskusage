@@ -1,25 +1,32 @@
 import threading
 
-def set_interval(interval, times = -1):
-	# This will be the actual decorator,
-	# with fixed interval and times parameter
-	def outer_wrap(function):
+'''
+Decorator Functions with Arguments
+
+
+Decorator is ideal when you need to extend the functionality of functions that you don't want to modify. 
+Essentially, decorators work as wrappers, modifying the behavior of the code 
+before and after a target function execution, without the need to modify the function itself, 
+augmenting the original functionality, thus decorating it.
+
+Reference to implement this feature
+- About Decorator : http://thecodeship.com/patterns/guide-to-python-function-decorators/
+
+'''
+def set_interval(interval):
+	# This will be the actual decorator with fixed interval
+	def decorator(function):
 		# This will be the function to be called
-		def wrap(*args, **kwargs):
-			stop = threading.Event()
+		def wrapper(*args, **kwargs):
+			stopped = threading.Event()
 
-			# This is another function to be executed
-			# in a different thread to simulate setInterval
-			def inner_wrap():
-				i = 0
-				while i != times and not stop.isSet():
-					stop.wait(interval)
+			def loop(): # excuted in another thread
+				while not stopped.wait(interval): # until stopped
 					function(*args, **kwargs)
-					i += 1
 
-			t = threading.Timer(0, inner_wrap)
-			t.daemon = True
+			t = threading.Thread(target=loop)
+			t.daemon = True # stop if the program exits
 			t.start()
-			return stop
-		return wrap
-	return outer_wrap
+			return stopped
+		return wrapper
+	return decorator

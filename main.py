@@ -8,7 +8,7 @@ from modules.arginfo import ArgInfo
 import modules.timer as timer
 
 # Timer callback will be invoked in every 1 minute
-@timer.set_interval(60, -1)
+@timer.set_interval(1)
 def start_logging(mylog, myPart):
 	myPart.update();
 
@@ -38,7 +38,7 @@ if __name__ == '__main__':
 	logInfo = Syslog(args.mountedpath, args.logtype, args.logpath);
 
 	print(">>>> Start logging <<<<")
-	stopper = start_logging(logInfo, partInfo)
+	stop = start_logging(logInfo, partInfo)
 
 	while 1:
 		try:
@@ -47,6 +47,6 @@ if __name__ == '__main__':
 			print("Proram is terminated by KeyboardInterrupt")
 			sys.exit();
 
-	stopper.set()
+	stop.set()
 	printf(">>>> End logging <<<<")
 
