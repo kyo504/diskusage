@@ -8,7 +8,7 @@ from modules.arginfo import ArgInfo
 import modules.timer as timer
 
 # Timer callback will be invoked in every 1 minute
-@timer.set_interval(1)
+@timer.set_interval(60)
 def start_logging(mylog, myPart):
 	myPart.update();
 
